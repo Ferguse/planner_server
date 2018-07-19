@@ -6,8 +6,8 @@ const mongoose = require('mongoose'),
     name: {
       type: String,
     },
-    color: {
-      type: String
+    isAdmin: {
+      type: Boolean
     }
   });
 

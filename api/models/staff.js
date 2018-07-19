@@ -9,9 +9,19 @@ const mongoose = require('mongoose'),
     color: {
       type: String
     },
-    workload: {
-      type: Array
-    }
+    workload: [
+      {
+        projectId: String,
+        weeks: Array,
+        percent: Number,
+        dates: [
+          {
+            start: String,
+            end: String
+          }
+        ]
+      }
+    ]
   });
 
 mongoose.model('staff', StaffSchema);
