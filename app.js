@@ -1,15 +1,15 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-var indexRouter = require('./api/routes/index');
-var usersRouter = require('./api/routes/users');
-var staffssRouter = require('./api/routes/staffs');
-var projectsRouter = require('./api/routes/projects');
+const indexRouter = require('./api/routes/index');
+const usersRouter = require('./api/routes/users');
+const staffssRouter = require('./api/routes/staffs');
+const projectsRouter = require('./api/routes/projects');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 require('./api/models/db');
 // require('./addUser')
+// TODO add session
 
 const mongoose = require('mongoose');
 
