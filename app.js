@@ -21,17 +21,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-require('./api/models/db');
+// require('./api/models/db');
 // require('./addUser')
 // TODO add session
 
 const mongoose = require('mongoose');
 
 //routes
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/projects', projectsRouter);
-app.use('/staffs', staffssRouter);
+app.use('/api/v_1/', indexRouter);
+app.use('/api/v_1/users', usersRouter);
+app.use('/api/v_1/projects', projectsRouter);
+app.use('/api/v_1/staffs', staffssRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

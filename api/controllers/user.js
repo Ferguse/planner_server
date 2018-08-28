@@ -1,47 +1,65 @@
-const mongoose = require('mongoose');
+var pgp = require("pg-promise")();
+const { postgres } = require('../../config');
+
+const { psql_name, psql_password, psql_host, psql_port, psql_db } = postgres;
 
 module.exports.getUsers = (req, res) => {
-  const User = mongoose.model('staff');
-
-  User.find().then(items => {
-    console.log(items);
-    res.status(200).json(items);
-  })
+  const db = pgp(`postgres://${psql_name}:${psql_password}@${psql_host}:${psql_port}/${psql_db}`);
+  db.any('SELECT * FROM users WHERE active = $1', [true])
+    .then(function(data) {
+      res.status(200).json(data);
+    })
+    .catch(function(error) {
+      res.send(`Error: ${error}`);
+    });
 };
 
 module.exports.getUser = (req, res) => {
-  const User = mongoose.model('user');
-
-  User.findOne({_id: req.id}).then(item => {
-    console.log(item);
-    res.status(200).json(item);
-  })
+  const db = pgp(`postgres://${psql_name}:${psql_password}@${psql_host}:${psql_port}/${psql_db}`);
+  console.log(req.id);
+  db.one('SELECT * FROM users WHERE id = $1', req.id)
+    .then(function(data) {
+      res.status(200).json(data);
+    })
+    .catch(function(error) {
+      res.send(`Error: ${error}`);
+    });
 };
 
 module.exports.postUser = (req, res) => {
-  const Staff = mongoose.model('user');
-  const staff = new User;
-  const { name, color } = req.body;
-  staff.set({name: name || 'noName', color: color || 'grey'});
-  console.log(name, color);
-  staff.save();
-  res.status(200).send('Information about new user saved');
+  const db = pgp(`postgres://${psql_name}:${psql_password}@${psql_host}:${psql_port}/${psql_db}`);
+  const { name, mail, password, role, notification } = req.body;
+
+  db.none('INSERT INTO users(name, mail, password, role, notification) VALUES($1, $2, $3, $4, $5)', [name, mail, password, role, notification])
+    .then(() => {
+      res.status(200).send('Information about new user saved in db');
+    })
+    .catch(error => {
+      res.send(`Error: ${error}`);
+    });
 };
 
 module.exports.putUser = (req, res) => {
-  const User = mongoose.model('user');
-  const query = {_id: req.body._id};
-  const update = {[req.body.key]: req.body.value};
-  User.findOneAndUpdate(query, update).then(item => {
-    console.log(item);
-    res.status(200).json(`Change ${req.body.key} for user with _id: ${req.body._id}`);
-  })
+  const db = pgp(`postgres://${psql_name}:${psql_password}@${psql_host}:${psql_port}/${psql_db}`);
+  const { key, value, id} = req.body;
+  db.none(`UPDATE users SET ${key} = '${value}' WHERE id = ${id}`)
+    .then(() => {
+      res.status(200).send('Information about user updated in db');
+    })
+    .catch(error => {
+      res.send(`Error: ${error}`);
+    });
 };
 
 module.exports.deleteUser = (req, res) => {
-  const User = mongoose.model('user');
-  User.deleteOne({_id: req.body._id}).then(items => {
-    res.status(200).send(`Delete user with _id: ${req.body._id}`);
-  })
+  const db = pgp(`postgres://${psql_name}:${psql_password}@${psql_host}:${psql_port}/${psql_db}`);
+  const { id} = req.body;
+  db.none(`DELETE FROM users WHERE id = '${id}'`)
+    .then(() => {
+      res.status(200).send('Information about user deleted from db');
+    })
+    .catch(error => {
+      res.send(`Error: ${error}`);
+    });
 };
 

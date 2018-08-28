@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const ctrStaff = require('../controllers/project');
+const ctrProject = require('../controllers/project');
 
-router.get('/', ctrStaff.getProject);
-router.post('/', ctrStaff.postProject);
-router.put('/', ctrStaff.putProject);
-router.delete('/', ctrStaff.deleteProject);
+router.get('/', ctrProject.getProjects);
+router.post('/', ctrProject.postProject);
+router.put('/', ctrProject.putProject);
+router.delete('/', ctrProject.deleteProject);
 
 module.exports = router;
